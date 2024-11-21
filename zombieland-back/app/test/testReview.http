@@ -1,28 +1,73 @@
 ### Récupération de toutes les évaluations
 GET http://localhost:3000/reviews
+Content-Type: application/json
+
+### Récupération de toutes les évaluations pour une activité spécifique avec pagination
+GET http://localhost:3000/reviews?activity_id=1&page=1
+Content-Type: application/json
+
+###
 
 ### Récupération d'une évaluation par ID
 GET http://localhost:3000/reviews/1
+Content-Type: application/json
 
-### Création d'une nouvelle évaluation
+###
+
+### Création d'une nouvelle évaluation (avec activité et réservation)
 POST http://localhost:3000/reviews
 Content-Type: application/json
 
 {
   "note": 5,
   "comment": "Amazing experience!",
-  "reservation_id": 4
+  "reservation_id": 4,
+  "activity_id": 1
 }
 
-### Mise à jour d'une évaluation
-PATCH http://localhost:3000/reviews/1
+###
+
+### Création d'une évaluation sans activity_id (doit retourner une erreur 400)
+POST http://localhost:3000/reviews
 Content-Type: application/json
 
 {
   "note": 4,
-  "comment": "Changed my mind, it was good!"
+  "comment": "Great activity!",
+  "reservation_id": 5
 }
 
-### Suppression d'une évaluation
-DELETE http://localhost:3000/reviews/7
+###
+
+### Mise à jour d'une évaluation (changer note, commentaire et activité)
+PATCH http://localhost:3000/reviews/1
 Content-Type: application/json
+
+{
+  "note": 3,
+  "comment": "It was okay after a second thought.",
+  "activity_id": 2
+}
+
+###
+
+### Mise à jour d'une évaluation avec un activity_id inexistant (doit retourner une erreur)
+PATCH http://localhost:3000/reviews/1
+Content-Type: application/json
+
+{
+  "activity_id": 999
+}
+
+###
+
+### Suppression d'une évaluation par ID
+DELETE http://localhost:3000/reviews/1
+Content-Type: application/json
+
+###
+
+### Suppression d'une évaluation inexistante (doit retourner une erreur 404)
+DELETE http://localhost:3000/reviews/999
+Content-Type: application/json
+
