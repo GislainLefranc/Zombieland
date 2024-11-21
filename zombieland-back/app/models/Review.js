@@ -28,16 +28,6 @@ Review.init({
         type: DataTypes.TEXT,
         allowNull: true // can be null; you must rate the activity or stay, but you're not forced to write a comment
     },
-    // Define the reservation ID because the ability to review is tied to having a reservation
-    reservation_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true,  // Ensure that the review is linked to only one reservation
-        references: {
-            model: 'reservation',
-            key: 'id'
-        }
-    },
     // Define the activity ID to link reviews to activities
     activity_id: {
         type: DataTypes.INTEGER,

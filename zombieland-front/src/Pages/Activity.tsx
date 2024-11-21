@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { CardProps, Card } from "../components/ActivityCard";
+import ReviewSection from "../components/ReviewSection";
 
 const Activity: React.FC = () => {
   const location = useLocation();
@@ -29,6 +30,10 @@ const Activity: React.FC = () => {
           multimedias={activity.multimedias}
           category_id={activity.category_id}
         />
+         {/* Ajout du système de notation */}
+         <div className="mt-8">
+          <ReviewSection activityId={activity.id} />
+        </div>
       </div>
     </div>
   );

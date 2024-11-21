@@ -44,20 +44,26 @@ export const getReviewById = async (req, res) => {
   
   // Create a review (Créer un avis)
   export const createReview = async (req, res) => {
-    const { note, comment, reservation_id, activity_id } = req.body;
-  
-    if (!activity_id) {
-      return res.status(400).json({ message: 'Activity ID is required' });
-    }
-  
     try {
-      const newReview = await Review.create({ note, comment, reservation_id, activity_id });
+      const { note, comment, activity_id } = req.body;
+  
+      // Vérification des champs requis
+      if (!note || typeof note !== "number" || note < 1 || note > 5) {
+        return res.status(400).json({ message: "Invalid or missing 'note' field" });
+      }
+      if (!activity_id || typeof activity_id !== "number") {
+        return res.status(400).json({ message: "Invalid or missing 'activity_id' field" });
+      }
+  
+      // Créez un nouvel avis
+      const newReview = await Review.create({ note, comment, activity_id });
       res.status(201).json(newReview);
     } catch (error) {
-      console.error('Error creating review:', error);
-      res.status(500).json({ message: 'Server error while creating review' });
+      console.error("Error creating review:", error);
+      res.status(500).json({ message: "Server error while creating review" });
     }
-  };    
+  };
+  
   
 // Update an existing review (Mettre à jour un avis existant)
 export const updateReview = async (req, res) => {

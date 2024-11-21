@@ -3,7 +3,7 @@ GET http://localhost:3000/reviews
 Content-Type: application/json
 
 ### Récupération de toutes les évaluations pour une activité spécifique avec pagination
-GET http://localhost:3000/reviews?activity_id=1&page=1
+GET http://localhost:3000/reviews?activity_id=32&page=1
 Content-Type: application/json
 
 ###
