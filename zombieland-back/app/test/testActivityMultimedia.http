@@ -1,0 +1,19 @@
+### Récupération des multimédias associés à une activité
+GET http://localhost:3000/activities/24/multimedia
+Content-Type: application/json
+
+###
+
+### Test ajout de multimédia à une activité
+PUT http://localhost:3000/activities/25/multimedia
+Content-Type: application/json
+
+{
+    "multimediaId": 3
+}
+
+###
+
+### Suppression d'un multimédia associé à une activité
+DELETE http://localhost:3000/activities/25/multimedia/3
+Content-Type: application/json

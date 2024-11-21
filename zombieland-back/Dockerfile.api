@@ -1,0 +1,20 @@
+# On part d'une image existante
+FROM node:20.17.0
+
+# On crée un répertoire pour notre application
+WORKDIR /usr/src/app
+
+# On copie les fichiers nécessaires à notre application
+COPY ./package.json ./package-lock.json ./
+
+# On installe les dépendances
+RUN npm install
+
+# On copie le reste des fichiers
+COPY . .
+
+# On expose le port 3000
+EXPOSE 3000
+
+# On lance l'application
+CMD ["npm", "start"]

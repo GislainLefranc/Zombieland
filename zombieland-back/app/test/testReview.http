@@ -1,0 +1,28 @@
+### Récupération de toutes les évaluations
+GET http://localhost:3000/reviews
+
+### Récupération d'une évaluation par ID
+GET http://localhost:3000/reviews/1
+
+### Création d'une nouvelle évaluation
+POST http://localhost:3000/reviews
+Content-Type: application/json
+
+{
+  "note": 5,
+  "comment": "Amazing experience!",
+  "reservation_id": 4
+}
+
+### Mise à jour d'une évaluation
+PATCH http://localhost:3000/reviews/1
+Content-Type: application/json
+
+{
+  "note": 4,
+  "comment": "Changed my mind, it was good!"
+}
+
+### Suppression d'une évaluation
+DELETE http://localhost:3000/reviews/7
+Content-Type: application/json

@@ -1,0 +1,33 @@
+### Récupération de tous les paiements
+GET http://localhost:3000/payments
+
+### Récupération d'un paiement spécifique par son id
+GET http://localhost:3000/payments/3
+
+### Création d'un nouveau paiement
+POST http://localhost:3000/payments
+Content-Type: application/json
+
+{
+    "amount": "100.00",
+    "status": "pending",
+    "date_amount": "2024-11-02",
+    "reservation_id": 9,
+    "stripe_payment_id": "sp_ghi787"
+}
+
+### Mise à jour d'un paiement
+PATCH http://localhost:3000/payments/6
+Content-Type: application/json
+
+{
+    "amount": "150.00",
+    "status": "pending",
+    "date_amount": "2024-11-02",
+    "reservation_id": 9,
+    "stripe_payment_id": "sp_ghi787"
+}
+
+### Suppression d'un paiement
+DELETE http://localhost:3000/payments/6
+Content-Type: application/json

@@ -1,0 +1,43 @@
+### Récupération de tous les utilisateurs
+GET http://localhost:3000/users
+Content-Type: application/json
+
+###
+
+### Récupération d'un utilisateur spécifique par ID
+GET http://localhost:3000/users/90
+Content-Type: application/json
+
+###
+
+### Création/Inscription d'un nouvel utilisateur (incluant le mot de passe)
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "firstname": "test1",
+  "lastname": "test",
+  "email": "test@gmail.com",
+  "image": "https://www.jesuisuntestetcestbienloulou.png",
+  "password": "test123"
+}
+
+
+### Mise à jour d'un profil utilisateur (sans changer le mot de passe)
+PATCH http://localhost:3000/users/32
+Content-Type: application/json
+
+{
+  "firstname": "TESTTEST",
+  "lastname": "TestMomifie",
+  "birthday": "1989-06-18",
+  "phone_number": "123456789",
+  "email": "retest.retetest@gmail.com",
+  "image": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
+}
+
+###
+
+### Suppression d'un utilisateur
+DELETE http://localhost:3000/users/28
+Content-Type: application/json

@@ -1,0 +1,25 @@
+### Récupération de tous les rôles
+GET http://localhost:3000/roles
+
+### Récupération d'un rôle par ID
+GET http://localhost:3000/roles/1
+
+### Création d'un nouveau rôle
+POST http://localhost:3000/roles
+Content-Type: application/json
+
+{
+    "name": "Superman"
+}
+
+### Mise à jour d'un rôle
+PATCH http://localhost:3000/roles/3
+Content-Type: application/json
+
+{
+    "name": "Super tortue"
+}
+
+### Suppression d'un rôle
+DELETE http://localhost:3000/roles/3
+Content-Type: application/json

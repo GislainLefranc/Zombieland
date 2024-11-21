@@ -1,0 +1,25 @@
+### Récupération de toutes les catégories
+GET http://localhost:3000/categories
+
+### Récupération d'une catégorie spécifique par son id
+GET http://localhost:3000/categories/1
+
+### Création d'une nouvelle catégorie
+POST http://localhost:3000/categories
+Content-Type: application/json
+
+{
+    "name": "test category"
+}
+
+### Mise à jour d'une catégorie
+PATCH http://localhost:3000/categories/4
+Content-Type: application/json
+
+{
+    "name": "test category updated"
+}
+
+### Suppression d'une catégorie
+DELETE http://localhost:3000/categories/4
+Content-Type: application/json

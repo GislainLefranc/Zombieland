@@ -1,0 +1,33 @@
+### Récupération de toutes les réservations
+GET http://localhost:3000/bookings
+
+### Récupération d'une réservation spécifique par son id
+GET http://localhost:3000/bookings/4
+
+### Création d'une nouvelle réservation
+POST http://localhost:3000/bookings
+Content-Type: application/json
+
+{
+    "date_start": "2024-11-02",
+    "date_end": "2024-11-03",
+    "number_tickets": "5",
+    "user_id": "4",
+    "period_id": "3"
+}
+
+### Mise à jour d'une réservation
+PATCH http://localhost:3000/bookings/11
+Content-Type: application/json
+
+{
+    "date_start": "2024-11-02",
+    "date_end": "2024-11-03",
+    "number_tickets": "8",
+    "user_id": "4",
+    "period_id": "3"
+}
+
+### Suppression d'une réservation
+DELETE http://localhost:3000/bookings/10
+Content-Type: application/json

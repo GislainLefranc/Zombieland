@@ -1,0 +1,52 @@
+/* Ajout des `@tailwind` directives pour chacun des couches de Tailwind au fichier `src/index.css`. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* html {
+    @apply font-body;
+} */
+
+/* Animation underline pour les link de la barre de navigation Desktop */
+@layer utilities {
+    .navigation a { 
+        @apply relative ml-10 font-bold tracking-[1px] hover:text-white
+    }
+    .navigation a::after {
+        @apply content-[''] bg-red-primary h-[3px] w-[0%] left-0 -bottom-[5px] rounded-xl absolute duration-300
+    }
+
+    .navigation a:hover::after {
+        @apply w-[100%]
+    }
+
+    .navigation a.active::after {
+        @apply w-[100%]
+    }
+}
+
+/* Animation underline pour les link de la barre de navigation Mobile */
+@layer utilities {
+    .navigation-mobile a { 
+        @apply relative ml-10 font-bold tracking-[1px] hover:text-white
+    }
+    .navigation-mobile a::after {
+        @apply content-[''] bg-red-primary h-[3px] w-[0%] left-0 -bottom-[5px] rounded-xl absolute duration-300
+    }
+    .navigation-mobile a:hover::after {
+        @apply w-[20%]
+    }
+}
+
+  /* Animation underline pour les link du footer */
+@layer utilities {
+    .footer-link a { 
+        @apply relative font-bold tracking-[1px] hover:text-white
+    }
+    .footer-link a::after {
+        @apply content-[''] bg-black h-[3px] w-[0%] left-0 -bottom-[5px] rounded-xl absolute duration-300
+    }
+    .footer-link a:hover::after {
+        @apply w-[100%]
+    }
+}
