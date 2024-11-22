@@ -2,10 +2,10 @@
 import { useEffect, useState } from "react";
 import Calendar from "../components/Calendar";
 import BookingForm from "../components/BookingForm";
-import { getDatas, createData } from "../services/api"; 
+import { getDatas, createData } from "../services/api";
 import { Title } from "../components/Title";
-import { useAuth } from "../Auth/authContext"; 
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../Auth/authContext";
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 // Interface pour définir la période
@@ -21,7 +21,16 @@ interface Period {
 const UserReservation: React.FC = () => {
   const { user } = useAuth(); // Appel direct au hook personnalisé
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
+  useEffect(() => {
+    if (searchParams.get('success') === 'true') {
+      toast.success("Réservation effectuée avec succès !");
+    } else if (searchParams.get('canceled') === 'true') {
+      toast.info("Réservation annulée.");
+    }
+  }, [searchParams]);
+  
   // Crée un état periods pour stocker un tableau de périodes.
   const [periods, setPeriods] = useState<Period[]>([]);
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -50,16 +59,16 @@ const UserReservation: React.FC = () => {
 
   // Gérer la sélection des dates dans le composant UserReservation.
   //const handleDateSelect = (start: Date | null, end: Date | null) => {
-    //setStartDate(start);
-    //setEndDate(end || start);
+  //setStartDate(start);
+  //setEndDate(end || start);
   //};
   const handleDateSelect = (start: Date | null, end: Date | null) => {
     setStartDate(start);
     setEndDate(end);
   };
-      //if (!endDate) {
-       // setEndDate(startDate);
-      //}
+  //if (!endDate) {
+  // setEndDate(startDate);
+  //}
 
   // Calculer le montant total d'une réservation
   useEffect(() => {
@@ -78,7 +87,7 @@ const UserReservation: React.FC = () => {
         const total = numberOfDays * period.price * numberOfTickets;
         setTotalAmount(total);
       } else {
-        setTotalAmount(0); 
+        setTotalAmount(0);
       }
     } else if (startDate) {
       const period = periods.find(
@@ -90,7 +99,7 @@ const UserReservation: React.FC = () => {
       if (period) {
         setTotalAmount(period.price * numberOfTickets);
       } else {
-        setTotalAmount(0); 
+        setTotalAmount(0);
       }
     } else {
       setTotalAmount(0);
@@ -114,20 +123,20 @@ const UserReservation: React.FC = () => {
       navigate('/login');
       return;
     }
-  
+
     if (!startDate) {
       toast.error("Veuillez sélectionner une date de début.");
       return;
     }
-  
+
     // Utilisez startDate comme endDate si endDate n'est pas défini (cas d'un seul jour sélectionné)
     const effectiveEndDate = endDate || startDate;
-  
+
     if (numberOfTickets <= 0) {
       toast.error("Veuillez entrer un nombre de billets supérieur à zéro.");
       return;
     }
-  
+
     try {
       const reservationData = {
         date_start: startDate.toISOString().split('T')[0],
@@ -140,9 +149,22 @@ const UserReservation: React.FC = () => {
             effectiveEndDate <= new Date(period.date_end)
         )?.id,
       };
-  
-      await createData("/bookings", reservationData);
-      toast.success("Réservation enregistrée avec succès !");
+
+      try {
+        // Envoyer les données de réservation au backend
+        const response = await createData("/bookings", reservationData);
+    
+        if (response?.sessionUrl) {
+            // Rediriger vers Stripe
+            window.location.href = response.sessionUrl;
+        } else {
+            toast.error("Erreur : l'URL de la session Stripe est introuvable.");
+        }
+    } catch (error) {
+        console.error("Erreur lors de la soumission de la réservation :", error);
+        toast.error("Erreur lors de la soumission. Veuillez réessayer plus tard.");
+    }
+      //toast.success("Réservation enregistrée avec succès !");
     } catch (error) {
       console.error("Erreur lors de l'enregistrement de la réservation", error);
       toast.error("Erreur lors de l'enregistrement de la réservation. Veuillez réessayer plus tard.");
@@ -151,18 +173,18 @@ const UserReservation: React.FC = () => {
   // Gère le cas où aucune période n'est trouvée
   if (isLoading) {
     return (
-    <div>
-      <p>Chargement en cours...</p>
-    </div>
-  );
+      <div>
+        <p>Chargement en cours...</p>
+      </div>
+    );
   }
 
   if (!periods || periods.length === 0) {
     return (
-    <div>
-      <p>Aucune période disponible pour la réservation.</p>
-    </div>
-  );
+      <div>
+        <p>Aucune période disponible pour la réservation.</p>
+      </div>
+    );
   }
 
   return (
