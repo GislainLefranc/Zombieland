@@ -1,19 +1,18 @@
 import express from 'express';
-import {getAllReviews, getReviewById, createReview, updateReview, deleteReview} from '../controllers/ReviewController.js';
+import { getAllReviews, getReviewById, createReview, deleteReview } from '../controllers/ReviewController.js';
+import authenticateJWT from '../middlewares/authenticateJWT.js';
+import { authorizeReservationOwner } from '../middlewares/authorizeReservationOwner.js';
 
 export const router = express.Router();
 
-// Route pour récupérer tous les avis
+// Route pour récupérer tous les avis (accessible aux visiteurs)
 router.get("/", getAllReviews);
 
-// Route pour récupérer un avis par ID
+// Route pour récupérer un avis par ID (accessible à tous)
 router.get("/:id", getReviewById);
 
-// Route pour créer un nouvel avis
-router.post("/", createReview);
+// Route pour créer un avis (vérifie l'utilisateur connecté et sa réservation)
+router.post("/", authenticateJWT, authorizeReservationOwner, createReview);
 
-// Route pour mettre à jour un avis
-router.patch("/:id", updateReview);
-
-// Route pour supprimer un avis
-router.delete("/:id", deleteReview);
+// Route pour supprimer un avis (vérifie l'utilisateur connecté et sa réservation)
+router.delete("/:id", authenticateJWT, deleteReview);

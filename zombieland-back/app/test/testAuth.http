@@ -3,8 +3,8 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "email": "retest.retetest@gmail.com",
-  "password": "jef123"
+  "email": "docjef62@gmail.com",
+  "password": "Ecto19021986*"
 }
 
 ###
@@ -12,7 +12,7 @@ Content-Type: application/json
 ### Mise à jour du mot de passe de l'utilisateur
 PATCH http://localhost:3000/auth/update-password/130
 Content-Type: application/json
-Authorization: Bearer <votre_jeton_jwt_valide>
+Authorization: Bearer <token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAwLCJyb2xlIjozLCJpYXQiOjE3MzIyNzE2NTgsImV4cCI6MTczMjI3NTI1OH0.AxkdfUzASOgL483jV6IA5UH8v4TmE3PKb_MFRwgjViQ>
 
 {
   "password": "jef123"

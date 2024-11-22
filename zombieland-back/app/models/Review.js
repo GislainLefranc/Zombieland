@@ -8,32 +8,33 @@ export default class Review extends Model {}
 
 // Initialize the Review model with its attributes and options
 Review.init({
-    // Define the ID of the review
+    //Define the id of the review
     id: {
         type: DataTypes.INTEGER,
-        primaryKey: true, // is a primary key
+        primaryKey: true, //is a primary key
         autoIncrement: true
     },
-    // Define the rate of the review (can only be rated out of 5)
+    //Define the rate of the review can only be rated out of 5
     note: {
         type: DataTypes.INTEGER,
         validate: {
             min: 1,
             max: 5
         },
-        allowNull: false // cannot be null
+        allowNull: false //cannot be null
     },
-    // Define the content of the review comment
+    //Define the content the review comment
     comment: {
         type: DataTypes.TEXT,
-        allowNull: true // can be null; you must rate the activity or stay, but you're not forced to write a comment
+        allowNull: true //can be null yoou must rate the activity or the stay but you're not forced to write a comment on it
     },
-    // Define the activity ID to link reviews to activities
-    activity_id: {
+    //Define the reservation id because the fact that you can put a review is liked to the fact that you have a reservation (you cannot write a review if you've never been to the park)
+    reservation_id: {
         type: DataTypes.INTEGER,
-        allowNull: false, // A review must always be linked to an activity
+        allowNull: false,
+        unique: true,  // Assure that the review is linked to only one reservation
         references: {
-            model: 'activity', // Assuming you have an `activity` table
+            model: 'reservation',
             key: 'id'
         }
     }

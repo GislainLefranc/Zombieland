@@ -1,117 +1,117 @@
 import Review from '../models/Review.js';
+import Reservation from '../models/Reservation.js';
+import { validationResult } from 'express-validator';
 
-// Get all reviews (Obtenir tous les avis)
+// Récupérer tous les avis (Accessible aux visiteurs uniquement)
 export const getAllReviews = async (req, res) => {
-  try {
-    const { page = 1, activity_id } = req.query;
-    const limit = 10; // Reviews per page
-    const offset = (page - 1) * limit;
+    try {
+        const reviews = await Review.findAll({
+            include: [
+                {
+                    model: Reservation,
+                    attributes: ['id'], // Ajouter d'autres attributs si nécessaire
+                },
+            ],
+            order: [['createdAt', 'DESC']],
+        });
 
-    const whereClause = activity_id ? { activity_id } : {}; // Filter by activity_id if provided
+        if (!reviews.length) {
+            return res.status(404).json({ message: 'Aucun avis trouvé.' });
+        }
 
-    const reviews = await Review.findAll({
-      where: whereClause,
-      limit,
-      offset,
-      order: [['created_at', 'DESC']]
-    });
-
-    if (!reviews.length) {
-      return res.status(404).json({ message: 'No reviews found' });
+        res.status(200).json(reviews);
+    } catch (error) {
+        console.error('Erreur lors de la récupération des avis :', error);
+        res.status(500).json({ message: 'Erreur serveur lors de la récupération des avis.' });
     }
-    res.status(200).json(reviews);
-  } catch (error) {
-    console.error('Server error while fetching reviews:', error);
-    res.status(500).json({ message: 'Server error while fetching reviews' });
-  }
 };
 
-// Get a single review by ID (Obtenir un avis par ID)
+// Récupérer un avis par ID (Accessible à tous)
 export const getReviewById = async (req, res) => {
     try {
-      const { id } = req.params;
-      const review = await Review.findByPk(id);
-  
-      if (!review) {
-        return res.status(404).json({ message: 'Review not found' });
+        const { id } = req.params;
+
+        const review = await Review.findByPk(id, {
+            include: [
+                {
+                    model: Reservation,
+                    attributes: ['id'],
+                },
+            ],
+        });
+
+        if (!review) {
+            return res.status(404).json({ message: 'Avis introuvable.' });
         }
-      res.status(200).json(review);
-    } catch (error) {
-      console.error('Server error while fetching review error');
-      res.status(500).json({ message: 'Server error while fetching review' });
-    }
-  };
-  
-  // Create a review (Créer un avis)
-  export const createReview = async (req, res) => {
-    try {
-      const { note, comment, activity_id } = req.body;
-  
-      // Vérification des champs requis
-      if (!note || typeof note !== "number" || note < 1 || note > 5) {
-        return res.status(400).json({ message: "Invalid or missing 'note' field" });
-      }
-      if (!activity_id || typeof activity_id !== "number") {
-        return res.status(400).json({ message: "Invalid or missing 'activity_id' field" });
-      }
-  
-      // Créez un nouvel avis
-      const newReview = await Review.create({ note, comment, activity_id });
-      res.status(201).json(newReview);
-    } catch (error) {
-      console.error("Error creating review:", error);
-      res.status(500).json({ message: "Server error while creating review" });
-    }
-  };
-  
-  
-// Update an existing review (Mettre à jour un avis existant)
-export const updateReview = async (req, res) => {
-    try {
-      const { id } = req.params;
-      const [updated] = await Review.update(req.body, { where: { id } });
-  
-      if (!updated) {
-        return res.status(404).json({ message: 'Review not found' }); // Avis non trouvé
-      }
-      const updatedReview = await Review.findByPk(id);
-      res.status(200).json(updatedReview);
-    } catch (error) {
-      console.error('Server error while updating review (Erreur serveur lors de la mise à jour de l\'avis)', error);
-      res.status(500).json({ message: 'Server error while updating review (Erreur serveur lors de la mise à jour de l\'avis)' });
-    }
-  };
-  
-  // Delete a review (Supprimer un avis)
-  export const deleteReview = async (req, res) => {
-    try {
-      const { id } = req.params;
-      const review = await Review.findByPk(id);
-  
-      if (!review) {
-        return res.status(404).json({ message: 'Review not found' }); 
-      }
-      await review.destroy();
-      res.status(204).send();
-    } catch (error) {
-      console.error('Server error while deleting review', error);
-      res.status(500).json({ message: 'Server error while deleting review' });
-    }
-  };
 
-  // Get average rating for an activity
-export const getAverageRating = async (req, res) => {
-  try {
-    const { activity_id } = req.params;
+        res.status(200).json(review);
+    } catch (error) {
+        console.error('Erreur lors de la récupération de l\'avis :', error);
+        res.status(500).json({ message: 'Erreur serveur lors de la récupération de l\'avis.' });
+    }
+};
 
-    const avgRating = await Review.findOne({
-      attributes: [[client.fn('AVG', client.col('note')), 'averageRating']],
-      where: { activity_id }
-    });
+// Créer un nouvel avis (Accessible aux utilisateurs connectés)
+export const createReview = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
 
-    res.status(200).json(avgRating);
-  } catch (error) {
-    console.error('Server error while calculating average rating:', error);
-    res.status(500).json({ message: 'Server error while calculating average rating' });
-  }
+    try {
+        const { note, comment, reservation_id } = req.body;
+
+        // Vérifiez si la réservation existe
+        const reservation = await Reservation.findByPk(reservation_id, {
+            where: { user_id: req.user.id }, // Assurez-vous que la réservation appartient à l'utilisateur connecté
+        });
+        if (!reservation) {
+            return res.status(400).json({ message: "La réservation n'existe pas ou ne vous appartient pas." });
+        }
+
+        // Vérifiez si un avis existe déjà pour cette réservation
+        const existingReview = await Review.findOne({ where: { reservation_id } });
+        if (existingReview) {
+            return res.status(400).json({
+                message: "Un avis pour cette réservation existe déjà.",
+            });
+        }
+
+        // Créez un nouvel avis
+        const newReview = await Review.create({
+            note,
+            comment,
+            reservation_id,
+            user_id: req.user.id, // Utilisateur connecté
+        });
+
+        res.status(201).json(newReview);
+    } catch (error) {
+        console.error('Erreur lors de la création de l\'avis :', error);
+        res.status(500).json({ message: 'Erreur serveur lors de la création de l\'avis.' });
+    }
+};
+
+// Supprimer un avis (Accessible aux utilisateurs connectés pour leurs avis uniquement)
+export const deleteReview = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const review = await Review.findByPk(id);
+
+        if (!review) {
+            return res.status(404).json({ message: "Avis introuvable." });
+        }
+
+        // Vérifiez si l'utilisateur connecté est le propriétaire de l'avis
+        if (review.user_id !== req.user.id) {
+            return res.status(403).json({ message: "Vous n'êtes pas autorisé à supprimer cet avis." });
+        }
+
+        await review.destroy();
+        res.status(204).send();
+    } catch (error) {
+        console.error("Erreur lors de la suppression de l'avis :", error);
+        res.status(500).json({ message: "Erreur serveur lors de la suppression de l'avis." });
+    }
 };
