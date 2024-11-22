@@ -101,7 +101,7 @@ const Footer = () => {
   return (
     <footer className="bg-red-primary my-0">
       <div className="mx-auto max-w-7xl overflow-hidden px-6 py-4 sm:py-4 lg:px-8">
-        <div className="flex items-center justify-between w-full">
+        <div className="flex flex-col md:flex-row items-center justify-between w-full">
           {/* Left Empty Space */}
           <div className="flex-1" />
 
@@ -115,7 +115,7 @@ const Footer = () => {
           </div>
 
           {/* Reviews on the right */}
-          <div className="flex-1 text-white flex flex-col items-center animate-scroll transition-opacity duration-1000 ease-in-out">
+          <div className="flex-1 text-white flex flex-col items-center justify-center mt-4 md:mt-0 animate-scroll transition-opacity duration-1000 ease-in-out">
             {reviews.length > 0 ? (
               <div className="text-center">
                 <p className="font-bold text-lg text-yellow-400">
