@@ -131,7 +131,7 @@ const Footer = () => {
               <p>Aucun avis disponible pour le moment.</p>
             )}
             <small className="italic text-gray-400">
-              Pour écrire un avis, veuillez effectuer une réservation.
+              Pour écrire un avis, rendez-vous dans votre profil.
             </small>
           </div>
         </div>
