@@ -1,0 +1,91 @@
+@baseUrl = http://localhost:5000/api
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczNzQwODg5NSwiZXhwIjoxNzM3NDEyNDk1fQ.F2QsLc54PbPwKPYrYLi98sbTrbj5b_2jKmwEGFhLFpY
+@randomSuffix = {{Math.floor(Date.now()/1000)}}
+
+### LOGIN ADMIN
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice.dupont@example.com",
+  "password": "password1"
+}
+
+### CATÉGORIES D'OPTIONS ###
+
+### CRÉER UNE CATÉGORIE D'OPTION
+POST {{baseUrl}}/categories?categoryType=option
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "OptCat8 {{randomSuffix}}",
+  "description": "Description de la catégorie d'option de test",
+  "is_default": false
+}
+
+
+### LISTER LES CATÉGORIES D'OPTION
+GET {{baseUrl}}/categories?categoryType=option
+Authorization: Bearer {{adminToken}}
+
+
+### OBTENIR UNE CATÉGORIE D'OPTION PAR ID
+# Remplacez 1 par l'id réel d'une catégorie d'option existante
+GET {{baseUrl}}/categories/5?categoryType=option
+Authorization: Bearer {{adminToken}}
+
+
+### METTRE À JOUR UNE CATÉGORIE D'OPTION
+# Remplacez 5 par l'id réel d'une catégorie d'option existante
+PUT {{baseUrl}}/categories/6?categoryType=option
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Upd Option Cat Test {{randomSuffix}}",
+  "description": "Description mise à jour"
+}
+
+
+### SUPPRIMER UNE CATÉGORIE D'OPTION
+# Remplacez 1 par l'id réel d'une catégorie d'option existante
+DELETE {{baseUrl}}/categories/6?categoryType=option
+Authorization: Bearer {{adminToken}}
+
+
+### CRÉER UNE CATÉGORIE D'ÉQUIPEMENT
+POST {{baseUrl}}/categories?categoryType=equipment
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Eq Cat2c",
+  "description": "Description mise à jour"
+}
+
+
+### LISTER LES CATÉGORIES D'ÉQUIPEMENT
+GET {{baseUrl}}/categories?categoryType=equipment
+Authorization: Bearer {{adminToken}}
+
+### OBTENIR UNE CATÉGORIE D'ÉQUIPEMENT PAR ID
+# Remplacez 1 par l'id réel d'une catégorie d'équipement existante
+GET {{baseUrl}}/categories/1?categoryType=equipment
+Authorization: Bearer {{adminToken}}
+
+### METTRE À JOUR UNE CATÉGORIE D'ÉQUIPEMENT
+# Remplacez 1 par l'id réel d'une catégorie d'équipement existante
+PUT {{baseUrl}}/categories/1?categoryType=equipment
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Upd Equip Cat {{randomSuffix}}",
+  "description": "Description mise à jour"
+}
+
+### SUPPRIMER UNE CATÉGORIE D'ÉQUIPEMENT
+# Remplacez 1 par l'id réel d'une catégorie d'équipement existante
+DELETE {{baseUrl}}/categories/1?categoryType=equipment
+Authorization: Bearer {{adminToken}}

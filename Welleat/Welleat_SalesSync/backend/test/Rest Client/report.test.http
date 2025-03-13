@@ -1,0 +1,24 @@
+@baseUrl = http://localhost:5000/api
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczNzEyNDYxOSwiZXhwIjoxNzM3MTI4MjE5fQ.vE-vt8t0ZvCj1FcK7n9oc4ySLP9dOFwOFQZfnSprnvI
+@randomSuffix = {{Math.floor(Date.now()/1000)}}
+
+### LOGIN ADMIN
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice.dupont@example.com",
+  "password": "password1"
+}
+
+### RAPPORT PAR TYPE D'ÉTABLISSEMENT
+GET {{baseUrl}}/reports/by-type-etablissement
+Authorization: Bearer {{adminToken}}
+
+### RAPPORT PAR TYPE D'ORGANISATION
+GET {{baseUrl}}/reports/by-type-organisation
+Authorization: Bearer {{adminToken}}
+
+### RAPPORT DÉTAILLÉ PAR ENTREPRISE
+GET {{baseUrl}}/reports/detailed-company
+Authorization: Bearer {{adminToken}}

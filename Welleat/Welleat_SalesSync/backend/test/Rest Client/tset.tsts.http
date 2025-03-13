@@ -1,0 +1,308 @@
+@baseUrl = http://localhost:5000/api
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczNzY2MzcyNSwiZXhwIjoxNzM3NjY3MzI1fQ.RuqpUVJwLu9sroT0njyUxPadFCz07hNtMu6sywdCQbI
+@randomSuffix = {{Math.floor(Date.now()/1000)}}
+
+### LOGIN ADMIN
+# Authentifie un administrateur et récupère un token JWT
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice.dupont@example.com",
+  "password": "password1"
+}
+
+### GET TOUS LES DEVIS
+# Récupère tous les devis accessibles par l'administrateur
+GET {{baseUrl}}/quotes
+Authorization: Bearer {{adminToken}}
+
+### CRÉER UN DEVIS
+# Crée un nouveau devis avec les détails spécifiés
+POST {{baseUrl}}/quotes
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "user_id": 1,
+  "interlocutor_id": 2,
+  "company_id": 3,
+  "valid_until": "2025-12-31",
+  "engagement_duration": 12,
+  "formula_id": 10,
+  "notes": "Premier devis de test {{randomSuffix}}",
+  "installation_included": true,
+  "maintenance_included": true,
+  "hotline_included": false,
+  "tax_rate": 20.0,
+  "discount_type": "percentage",
+  "discount_value": 10.0,
+  "discount_reason": "Promotion de lancement",
+  "equipments": [
+    {
+      "equipment_id": 1,
+      "quantity": 2,
+      "unit_price_ht": 100.00,
+      "is_first_unit_free": true
+    },
+    {
+      "equipment_id": 2,
+      "quantity": 1,
+      "unit_price_ht": 200.00,
+      "is_first_unit_free": false
+    }
+  ],
+  "option_ids": [1, 3]
+}
+
+### GET UN DEVIS PAR ID
+# Récupère les détails d'un devis spécifique par ID
+GET {{baseUrl}}/quotes/1
+Authorization: Bearer {{adminToken}}
+
+### METTRE À JOUR UN DEVIS
+# Met à jour les informations d'un devis spécifique
+PUT {{baseUrl}}/quotes/40
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "status": "submitted",
+  "notes": "Mise à jour des notes du devis {{randomSuffix}}"
+}
+
+### SOUMETTRE UN DEVIS
+# Soumet un devis pour approbation
+POST {{baseUrl}}/quotes/1/submit
+Authorization: Bearer {{adminToken}}
+
+### APPROUVER UN DEVIS
+# Approuve un devis soumis
+POST {{baseUrl}}/quotes/1/approve
+Authorization: Bearer {{adminToken}}
+
+### REJETER UN DEVIS
+# Rejette un devis soumis avec une raison
+POST {{baseUrl}}/quotes/1/reject
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "reason": "Informations manquantes {{randomSuffix}}"
+}
+
+### AJOUTER UN ÉQUIPEMENT À UN DEVIS
+# Ajoute un équipement spécifique à un devis
+POST {{baseUrl}}/quotes/40/equipments
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "equipment_id": 3,
+  "quantity": 5,
+  "unit_price_ht": 150.00,
+  "is_first_unit_free": false
+}
+
+### METTRE À JOUR UN ÉQUIPEMENT DANS UN DEVIS
+# Met à jour les détails d'un équipement dans un devis
+PUT {{baseUrl}}/quotes/1/equipments/3
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "quantity": 10,
+  "is_first_unit_free": true
+}
+
+### SUPPRIMER UN ÉQUIPEMENT D'UN DEVIS
+# Supprime un équipement spécifique d'un devis
+DELETE {{baseUrl}}/quotes/1/equipments/3
+Authorization: Bearer {{adminToken}}
+
+### CRÉER UNE OPTION POUR UN DEVIS
+# Ajoute une option spécifique à un devis
+POST {{baseUrl}}/quotes/1/options
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "option_id": 2,
+  "additional_price_ht": 50.00
+}
+
+### GET TOUS LES ÉQUIPEMENTS
+# Récupère la liste de tous les équipements disponibles
+GET {{baseUrl}}/equipments
+Authorization: Bearer {{adminToken}}
+
+### GET CATÉGORIES D'ÉQUIPEMENTS
+# Récupère toutes les catégories d'équipements
+GET {{baseUrl}}/equipments/categories
+Authorization: Bearer {{adminToken}}
+
+### CRÉER UN ÉQUIPEMENT
+# Crée un nouvel équipement avec les détails spécifiés
+POST {{baseUrl}}/equipments
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Équipement Test {{randomSuffix}}",
+  "description": "Description de l'équipement de test",
+  "free_equipment": false,
+  "price_ht": 100,
+  "price": 120,
+  "equipment_category_id": 1,     
+  "notes": "Notes de test",
+  "formula_discount": 5,
+  "formula_compatible": true,
+  "image": "http://exemple.com/image.jpg"
+}
+
+### METTRE À JOUR UN ÉQUIPEMENT - Mise à jour complète
+# Met à jour entièrement un équipement spécifique
+PUT {{baseUrl}}/equipments/32
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Équipement Test MAJ {{randomSuffix}}",
+  "description": "Description mise à jour",
+  "free_equipment": false,
+  "price_ht": 150,
+  "price": 180,
+  "equipment_category_id": 1,
+  "notes": "Notes mises à jour",
+  "formula_discount": 10,
+  "formula_compatible": true,
+  "image": "http://exemple.com/image-updated.jpg"
+}
+
+### METTRE À JOUR UN ÉQUIPEMENT - Mise à jour partielle
+# Met à jour partiellement un équipement spécifique
+PUT {{baseUrl}}/equipments/3
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Équipement Test Simple MAJ {{randomSuffix}}",
+  "price_ht": 150,
+  "price": 180
+}
+
+### METTRE À JOUR UN ÉQUIPEMENT - Test erreur ID invalide
+# Tente de mettre à jour un équipement avec un ID invalide pour tester la gestion des erreurs
+PUT {{baseUrl}}/equipments/999
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Test Erreur",
+  "price_ht": 150,
+  "price": 180
+}
+
+### SUPPRIMER UN ÉQUIPEMENT
+# Supprime un équipement spécifique
+DELETE {{baseUrl}}/equipments/5
+Authorization: Bearer {{adminToken}}
+
+### CRÉER UNE CATÉGORIE D'ÉQUIPEMENT
+# Crée une nouvelle catégorie d'équipement
+POST {{baseUrl}}/equipments/categories
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Catégorie Test {{randomSuffix}}",
+  "description": "Description de la catégorie de test"
+}
+
+### LISTER LES CATÉGORIES D'ÉQUIPEMENT
+# Récupère la liste de toutes les catégories d'équipement
+GET {{baseUrl}}/equipments/categories
+Authorization: Bearer {{adminToken}}
+
+### METTRE À JOUR UNE CATÉGORIE D'ÉQUIPEMENT
+# Met à jour une catégorie d'équipement spécifique
+PUT {{baseUrl}}/equipments/categories/1
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Catégorie Test MAJ {{randomSuffix}}",
+  "description": "Description mise à jour"
+}
+
+### SUPPRIMER UNE CATÉGORIE D'ÉQUIPEMENT
+# Supprime une catégorie d'équipement spécifique
+DELETE {{baseUrl}}/equipments/categories/5
+Authorization: Bearer {{adminToken}}
+
+### CRÉER UN ÉQUIPEMENT DANS UNE CATÉGORIE
+# Crée un nouvel équipement dans une catégorie spécifique
+POST {{baseUrl}}/equipments
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Équipement Test Catégorie 36 {{randomSuffix}}",
+  "description": "Description de l'équipement lié à la catégorie 36",
+  "free_equipment": false,
+  "price_ht": 200,
+  "price": 240,
+  "equipment_category_id": 36,
+  "notes": "Notes de test pour la catégorie 36",
+  "formula_discount": 10,
+  "formula_compatible": true,
+  "image": "http://exemple.com/image-categorie36.jpg"
+}
+
+### OBTENIR LES ÉQUIPEMENTS D'UNE CATÉGORIE SPÉCIFIQUE
+# Récupère les équipements appartenant à une catégorie spécifique
+GET {{baseUrl}}/equipments?category_id=36
+Authorization: Bearer {{adminToken}}
+
+### CRÉER UNE NOUVELLE FORMULE
+# Crée une nouvelle formule avec les options spécifiées
+POST {{baseUrl}}/formulas
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Formule Premium {{randomSuffix}}",
+  "description": "Inclut toutes les fonctionnalités avancées",
+  "price_ht": 1000.00,
+  "installation_price": 200.00,
+  "maintenance_price": 150.00,
+  "hotline_price": 50.00,
+  "option_ids": [2, 4]
+}
+
+### GET TOUS LES FORMULES
+# Récupère la liste de toutes les formules disponibles
+GET {{baseUrl}}/formulas
+Authorization: Bearer {{adminToken}}
+
+### GET UNE FORMULE PAR ID
+# Récupère les détails d'une formule spécifique par ID
+GET {{baseUrl}}/formulas/1
+Authorization: Bearer {{adminToken}}
+
+### METTRE À JOUR UNE FORMULE
+# Met à jour une formule existante
+PUT {{baseUrl}}/formulas/1
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Formule Standard MAJ {{randomSuffix}}",
+  "price_ht": 800.00,
+  "option_ids": [1, 3]
+}
+
+### SUPPRIMER UNE FORMULE
+# Supprime une formule spécifique
+DELETE {{baseUrl}}/formulas/1
+Authorization: Bearer {{adminToken}}

@@ -1,0 +1,38 @@
+@baseUrl = http://localhost:5000/api
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczODgzODE1NSwiZXhwIjoxNzM4ODQxNzU1fQ.HVBnvkqeGs3iII2WcRn2OW8e2Z113OUbOP7OqIlTOWI
+@randomSuffix = {{Math.floor(Date.now()/1000)}}
+
+### GET TOUS LES UTILISATEURS (Admin)
+GET {{baseUrl}}/users
+Authorization: Bearer {{adminToken}}
+
+### GET LE PROFIL DE L'UTILISATEUR CONNECTÉ
+GET {{baseUrl}}/users/me
+Authorization: Bearer {{adminToken}}
+
+### CRÉER UN UTILISATEUR (Admin)
+POST {{baseUrl}}/users/create
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "firstName": "Test",
+  "lastName": "Utilisateur {{randomSuffix}}",
+  "email": "test.utilisateur{{randomSuffix}}@example.com",
+  "password": "password",
+  "roleId": 2
+}
+
+### METTRE À JOUR LE PROFIL DE L'UTILISATEUR CONNECTÉ
+PUT {{baseUrl}}/users/me
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "firstName": "Test MAJ",
+  "phone": "0123456789"
+}
+
+### SUPPRIMER UN UTILISATEUR (Admin)
+DELETE {{baseUrl}}/users/:id
+Authorization: Bearer {{adminToken}}

@@ -1,0 +1,61 @@
+@baseUrl = http://localhost:5000/api
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczODgzMTMzOSwiZXhwIjoxNzM4ODM0OTM5fQ.9Wf3PrQgNRCoM6L6abs_eGpDy-BGNhaKyQAlMgBeeSY
+
+### Login Admin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice.dupont@example.com",
+  "password": "password1"
+}
+
+### Test assignation multiple
+POST {{baseUrl}}/assign
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "users": [1, 2],
+  "companies": [1],
+  "interlocutors": [1, 2],
+  "itemType": "companies_users_interlocutors"  
+}
+
+### Test assignation utilisateur à entreprise
+POST {{baseUrl}}/companies/1/assign-user
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "userId": 5
+}
+
+### Test assignation interlocuteurs à entreprise 
+POST {{baseUrl}}/companies/1/assign-interlocutors
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "interlocutorIds": [1, 2]
+}
+
+### Test définition interlocuteur principal
+PUT {{baseUrl}}/assign/set-principal-interlocutor/10/10
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "isPrincipal": true
+}
+
+### Test validation erreur - données manquantes
+POST {{baseUrl}}/assign
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "users": [],
+  "companies": [],
+  "interlocutors": []
+}

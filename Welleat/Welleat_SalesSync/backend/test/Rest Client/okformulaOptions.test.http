@@ -1,0 +1,206 @@
+@baseUrl = http://localhost:5000/api
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczNzY0NzE4MCwiZXhwIjoxNzM3NjUwNzgwfQ.EQyjarf-qK7WD_9su78nFF4eOxQtwA-XX2jYiE1oeiI
+
+### LOGIN ADMIN
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice.dupont@example.com",
+  "password": "password1"
+}
+
+### 2. Création Formule Simple
+# @name createFormula
+POST {{baseUrl}}/formulas
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczNzY0NzE4MCwiZXhwIjoxNzM3NjUwNzgwfQ.EQyjarf-qK7WD_9su78nFF4eOxQtwA-XX2jYiE1oeiI
+Content-Type: application/json
+
+{
+    "name": "Formule Test Simple",
+    "description": "Description de test",
+    "price_ht": 100.00,
+    "installation_price": 50.00,
+    "maintenance_price": 30.00,
+    "hotline_price": 20.00
+}
+
+### 3. Création Formule avec Options
+POST {{baseUrl}}/formulas
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczNzY0NzE4MCwiZXhwIjoxNzM3NjUwNzgwfQ.EQyjarf-qK7WD_9su78nFF4eOxQtwA-XX2jYiE1oeiI
+Content-Type: application/json
+
+{
+    "name": "Formule avec Options",
+    "description": "Description avec options",
+    "price_ht": 150.00,
+    "installation_price": 50.00,
+    "maintenance_price": 30.00,
+    "hotline_price": 20.00,
+    "option_ids": [1]
+}
+
+### 4. Test Validation (price_ht manquant)
+POST {{baseUrl}}/formulas
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczNzU2Nzc1NCwiZXhwIjoxNzM3NTcxMzU0fQ.OhibvdJfOvoWlk3mdPhalgbZ8PuYlA6vEpjFGaWHa7U
+Content-Type: application/json
+
+{
+    "name": "Formule Invalid",
+    "description": "Test validation",
+    "installation_price": 50.00
+}
+
+### ASSOCIER UNE OPTION À UNE FORMULE
+POST {{baseUrl}}/formula-options
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczNzU2Nzc1NCwiZXhwIjoxNzM3NTcxMzU0fQ.OhibvdJfOvoWlk3mdPhalgbZ8PuYlA6vEpjFGaWHa7U
+
+{
+  "formula_id": 1,
+  "option_id": 3
+}
+
+### RETIRER UNE OPTION D'UNE FORMULE
+DELETE {{baseUrl}}/formula-options/:formula_id/:option_id
+Authorization: Bearer {{adminToken}}
+
+### TENTATIVE D'ASSOCIATION INVALIDE
+### 1. Créer une formule
+POST {{baseUrl}}/formulas
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczNzU2Nzc1NCwiZXhwIjoxNzM3NTcxMzU0fQ.OhibvdJfOvoWlk3mdPhalgbZ8PuYlA6vEpjFGaWHa7U
+Content-Type: application/json
+
+{
+  "name": "Formule Test {{$timestamp}}",
+  "description": "Description test",
+  "price_ht": 100.00,
+  "installation_price": 50.00,
+  "maintenance_price": 30.00,
+  "hotline_price": 20.00
+}
+
+### 2. Récupérer toutes les formules
+GET {{baseUrl}}/formulas
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczNzY0NjEyMiwiZXhwIjoxNzM3NjQ5NzIyfQ.qDcd_Weys9RAe-lAabB_52rNT_QwJVQH4X_f1OlLIfg
+
+### 3. Récupérer une formule par ID
+GET {{baseUrl}}/formulas/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczNzY0NjEyMiwiZXhwIjoxNzM3NjQ5NzIyfQ.qDcd_Weys9RAe-lAabB_52rNT_QwJVQH4X_f1OlLIfg
+
+### 4. Mettre à jour une formule
+PUT {{baseUrl}}/formulas/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczNzY0NjEyMiwiZXhwIjoxNzM3NjQ5NzIyfQ.qDcd_Weys9RAe-lAabB_52rNT_QwJVQH4X_f1OlLIfg
+Content-Type: application/json
+
+{
+  "name": "Formule Modifiée {{$timestamp}}",
+  "price_ht": 150.00
+}
+
+### 5. Supprimer une formule
+DELETE {{baseUrl}}/formulas/1
+Authorization: Bearer {{adminToken}}
+@baseUrl = http://localhost:5000/api
+@adminToken = {{$processEnv ADMIN_TOKEN}}
+
+### 1. Associer une option à une formule
+POST {{baseUrl}}/formula-options
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczNzU2Nzc1NCwiZXhwIjoxNzM3NTcxMzU0fQ.OhibvdJfOvoWlk3mdPhalgbZ8PuYlA6vEpjFGaWHa7U
+Content-Type: application/json
+
+{
+  "formula_id": 1,
+  "option_id": 1
+}
+
+### 2. Retirer une option d'une formule
+DELETE {{baseUrl}}/formula-options/1/1
+Authorization: Bearer {{adminToken}}
+
+### 3. Tentative d'association invalide
+POST {{baseUrl}}/formula-options
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "formula_id": 999,
+  "option_id": 999
+}
+
+@baseUrl = http://localhost:5000/api
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczNzU2Nzc1NCwiZXhwIjoxNzM3NTcxMzU0fQ.OhibvdJfOvoWlk3mdPhalgbZ8PuYlA6vEpjFGaWHa7U
+
+### 1. Créer une catégorie d'option
+POST {{baseUrl}}/option-categories
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+    "name": "Catégorie Test",
+    "description": "Description catégorie test"
+}
+
+### 2. Créer l'option avec catégorie
+POST {{baseUrl}}/options
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+    "name": "Option 1",
+    "description": "Description option 1",
+    "price_ht": 50.00,
+    "price_ttc": 60.00,
+    "category_id": 6
+}
+
+### 3. Créer la formule avec l'option
+POST {{baseUrl}}/formulas
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+    "name": "Formule avec Options",
+    "description": "Description avec options",
+    "price_ht": 150.00,
+    "installation_price": 50.00,
+    "maintenance_price": 30.00,
+    "hotline_price": 20.00,
+    "option_ids": [1]
+}
+
+### 4. Vérifier la formule créée
+GET {{baseUrl}}/formulas/1
+Authorization: Bearer {{adminToken}}
+
+### 1. Créer une option avec catégorie par défaut
+POST {{baseUrl}}/options
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+    "name": "Option Test",
+    "description": "Description option test",
+    "price_ht": 50.00,
+    "price_ttc": 60.00,
+    "category_id": 1  
+}
+
+### 2. Créer une formule avec l'option
+POST {{baseUrl}}/formulas
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+    "name": "Formule avec Option",
+    "description": "Description formule test",
+    "price_ht": 150.00,
+    "installation_price": 50.00,
+    "maintenance_price": 30.00,
+    "hotline_price": 20.00,
+    "option_ids": [2]  
+}
+
+### 3. Vérifier l'association
+GET {{baseUrl}}/formulas
+Authorization: Bearer {{adminToken}}

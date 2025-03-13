@@ -1,0 +1,16 @@
+@baseUrl = http://localhost:5000/api
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczNzQxMTYyNywiZXhwIjoxNzM3NDE1MjI3fQ.TKx_AKHqPmZs5wfD2Twp7OmcWPQue8WXyRBaBhnb6qk
+@randomSuffix = {{Math.floor(Date.now()/1000)}}
+
+### LOGIN ADMIN
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice.dupont@example.com",
+  "password": "password1"
+}
+
+### GET DONNÉES DU DASHBOARD
+GET {{baseUrl}}/dashboard
+Authorization: Bearer {{adminToken}}

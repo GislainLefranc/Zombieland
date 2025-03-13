@@ -1,0 +1,23 @@
+@baseUrl = http://localhost:5000/api
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczNzY2MzkzNiwiZXhwIjoxNzM3NjY3NTM2fQ.jDKRQ5S5lLKGetFHDvgiLz15kQ2nWk8SnjjPP2lIZKg
+@randomSuffix = {{Math.floor(Date.now()/1000)}}
+
+### LOGIN ADMIN
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice.dupont@example.com",
+  "password": "password1"
+}
+
+### ASSIGNER DES UTILISATEURS, ENTREPRISES ET INTERLOCUTEURS
+POST {{baseUrl}}/assign
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "users": [1, 2],
+  "companies": [1],
+  "interlocutors": [1, 3]
+}

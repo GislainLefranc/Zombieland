@@ -1,0 +1,33 @@
+{
+    "env": {
+      "node": true,
+      "es2021": true,
+      "jest": true
+    },
+    "extends": ["airbnb-base", "plugin:prettier/recommended"],
+    "parserOptions": {
+      "ecmaVersion": 12,
+      "sourceType": "module"
+    },
+    "rules": {
+      "no-console": "off",
+      "consistent-return": "off",
+      "no-underscore-dangle": "off",
+      "import/extensions": [
+        "error",
+        "ignorePackages",
+        {
+          "js": "never",
+          "json": "always"
+        }
+      ]
+    },
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "extensions": [".js", ".json"]
+        }
+      }
+    }
+  }
+  

@@ -1,0 +1,109 @@
+@baseUrl = http://localhost:5000/api
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczNzY2NjYyNCwiZXhwIjoxNzM3NjcwMjI0fQ.fukR-hQBTl2cRdHMCUSxRQ-Rt_Q4QcdmtxpU5YompGw
+
+### LOGIN ADMIN
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice.dupont@example.com",
+  "password": "password1"
+}
+
+### AJOUTER UN ÉQUIPEMENT À UN DEVIS
+POST {{baseUrl}}/quotes/31/equipment
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "equipment_id": 5,
+  "quantity": 3,
+  "unit_price_ht": 1000.00,
+  "is_first_unit_free": false
+}
+
+### RÉCUPÉRER LES ÉQUIPEMENTS D'UN DEVIS
+GET {{baseUrl}}/quotes/31/equipment
+Authorization: Bearer {{adminToken}}
+
+### METTRE À JOUR UN ÉQUIPEMENT DANS UN DEVIS
+PUT {{baseUrl}}/quotes/2/equipment/1
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "quantity": 4,
+  "unit_price_ht": 130
+}
+
+### SUPPRIMER UN ÉQUIPEMENT D'UN DEVIS
+DELETE /api/quotes/2/equipment/1
+Authorization: Bearer {{adminToken}}
+
+### Créer un nouvel équipement
+# @name createEquipment
+POST {{baseUrl}}/equipments
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+    "name": "Test Equipment",
+    "description": "Équipement pour test",
+    "free_equipment": false,
+    "price_ht": 1000.00,
+    "price": 1200.00,
+    "category": "Electronics",
+    "notes": "Test notes",
+    "formula_compatible": true,
+    "formula_discount": 1
+}
+
+### Ajouter l'équipement au devis
+POST {{baseUrl}}/quotes/8/equipment
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+    "equipment_id": 14,
+    "quantity": 3,
+    "unit_price_ht": 1000.00,
+    "is_first_unit_free": false
+}
+
+### CRÉER UN DEVIS
+# Crée un nouveau devis avec les détails spécifiés
+POST {{baseUrl}}/quotes
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "user_id": 1,
+  "interlocutor_id": 2,
+  "company_id": 3,
+  "valid_until": "2025-12-31",
+  "engagement_duration": 12,
+  "formula_id": 50,  
+  "notes": "Premier devis de test {{randomSuffix}}",
+  "installation_included": true,
+  "maintenance_included": true,
+  "hotline_included": false,
+  "tax_rate": 20.0,
+  "discount_type": "percentage",
+  "discount_value": 10.0,
+  "discount_reason": "Promotion de lancement",
+  "equipments": [
+    {
+      "equipment_id": 1,
+      "quantity": 2,
+      "unit_price_ht": 100.00,
+      "is_first_unit_free": true
+    },
+    {
+      "equipment_id": 2,
+      "quantity": 1,
+      "unit_price_ht": 200.00,
+      "is_first_unit_free": false
+    }
+  ],
+  "option_ids": [1, 3]
+}

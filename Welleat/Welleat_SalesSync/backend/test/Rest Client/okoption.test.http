@@ -1,0 +1,167 @@
+@baseUrl = http://localhost:5000/api
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZS5kdXBvbnRAZXhhbXBsZS5jb20iLCJyb2xlSWQiOjEsImlhdCI6MTczNzY1NzY1MywiZXhwIjoxNzM3NjYxMjUzfQ.FjnLKkZdVojUY42hw96bH7zYSczPV9u7APL51j_-P3c
+@randomSuffix = {{Math.floor(Date.now()/1000)}}
+
+### LOGIN ADMIN
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice.dupont@example.com",
+  "password": "password1"
+}
+
+### GET TOUTES LES OPTIONS
+GET {{baseUrl}}/options
+Authorization: Bearer {{adminToken}}
+
+### GET CATÉGORIES D'OPTIONS
+GET {{baseUrl}}/options/categories
+Authorization: Bearer {{adminToken}}
+
+### CRÉER UNE CATÉGORIE D'OPTION
+POST {{baseUrl}}/options/categories
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Catégocsriec Test {{randomSuffix}}",
+  "description": "Description de la catégorie"
+}
+
+### METTRE À JOUR UNE CATÉGORIE D'OPTION
+PUT {{baseUrl}}/options/categories/1
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Catégorie MAJ {{randomSuffix}}",
+  "description": "Description mise à jour"
+}
+
+### SUPPRIMER UNE CATÉGORIE D'OPTION
+DELETE {{baseUrl}}/options/categories/1
+Authorization: Bearer {{adminToken}}
+
+### CRÉER UNE OPTION
+POST {{baseUrl}}/options
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Option Test",
+  "description": "Description de l'option",
+  "price_ht": 50,
+  "category_id": 1,
+  "notes": "Notes de test",
+  "discount_type": "percentage",
+  "discount_value": 10
+}
+
+### GET UNE OPTION PAR ID
+GET {{baseUrl}}/options/1
+Authorization: Bearer {{adminToken}}
+
+### METTRE À JOUR UNE OPTION
+PUT {{baseUrl}}/options/5
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Option MAJ {{randomSuffix}}",
+  "price_ht": 60
+}
+
+### SUPPRIMER UNE OPTION
+DELETE {{baseUrl}}/options/1
+Authorization: Bearer {{adminToken}}
+
+
+### RETIRER UNE OPTION DE SA CATÉGORIE
+PUT {{baseUrl}}/options/5/remove-category
+Authorization: Bearer {{adminToken}}
+
+### CRÉER UNE OPTION COMPLÈTE
+POST {{baseUrl}}/options
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Option Test {{randomSuffix}}",
+  "description": "Description détaillée de l'option de test",
+  "price_ht": 49.99,
+  "category_id": 15,
+  "notes": "Notes importantes pour cette option",
+  "discount_type": "percentage",
+  "discount_value": 10
+}
+
+### CRÉER UNE OPTION MINIMALE (CHAMPS REQUIS UNIQUEMENT)
+POST {{baseUrl}}/options
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Ozzzption Minimale {{randomSuffix}}",
+  "price_ht": 29.99,
+}
+
+### CRÉER UNE OPTION AVEC PRIX TTC AUTOMATIQUE
+POST {{baseUrl}}/options
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Option avec TVA {{randomSuffix}}",
+  "price_ht": 100.00,
+  "category_id": 1,
+  "description": "Le prix TTC sera calculé automatiquement"
+}
+
+### TEST ERREUR - CRÉER UNE OPTION SANS CATÉGORIE
+POST {{baseUrl}}/options
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Option Sans Catégorie",
+  "price_ht": 39.99
+}
+
+### TEST ERREUR - CRÉER UNE OPTION AVEC CATÉGORIE INVALIDE
+POST {{baseUrl}}/options
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Option Catégorie Invalide",
+  "price_ht": 39.99,
+  "category_id": 999999
+}
+
+
+### RETIRER UNE OPTION DE SA CATÉGORIE
+PUT {{baseUrl}}/options/1/remove-category
+Authorization: Bearer {{adminToken}}
+
+### Réponse Attendue
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "success": true,
+  "message": "Option retirée de la catégorie avec succès",
+  "data": {
+    "id": 1,
+    "name": "Option Test",
+    "description": "Description de l'option",
+    "price_ht": "50.00",
+    "price_ttc": "0.00",
+    "notes": "Notes de test",
+    "discount_type": "percentage",
+    "discount_value": "10.00",
+    "category_id": null,
+    "createdAt": "2025-01-22T14:38:25.876Z",
+    "updatedAt": "2025-01-22T15:50:00.000Z"
+  }
+}
